@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>31097188020-2515jfqtd56vbh03mgleeic63e80nrqi.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.31097188020-2515jfqtd56vbh03mgleeic63e80nrqi</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBcviKZeLuKEqBMeHG0a0p8s_wqO1Qf4uQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>31097188020</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>io.flutter.flutter.app</string>
+	<key>PROJECT_ID</key>
+	<string>snapshots-46f41</string>
+	<key>STORAGE_BUCKET</key>
+	<string>snapshots-46f41.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:31097188020:ios:6f150bd22447f2548971e1</string>
+	<key>DATABASE_URL</key>
+	<string>https://snapshots-46f41.firebaseio.com</string>
+</dict>
+</plist>
