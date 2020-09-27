@@ -13,6 +13,23 @@ class SendPic extends StatefulWidget {
 }
 
 class _SendPicState extends State<SendPic> {
+
+  String selectedDrink = "";
+
+  Map<String, Icon> tempList = {
+    "Beer": Icon(Icons.local_drink, size: 40,),
+    "Red wine": Icon(Icons.local_drink, size: 40),
+    "White wine": Icon(Icons.local_drink, size: 40),
+    "White wine2": Icon(Icons.local_drink, size: 40),
+    "White wine3": Icon(Icons.local_drink, size: 40),
+    "White wine4": Icon(Icons.local_drink, size: 40),
+    "White wine5": Icon(Icons.local_drink, size: 40),
+    "Whiskey": Icon(Icons.local_drink, size: 40),
+    "Cider": Icon(Icons.local_drink, size: 40),
+    "Water": Icon(Icons.local_drink, size: 40),
+    "P2": Icon(Icons.local_drink, size: 40),
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +66,9 @@ class _SendPicState extends State<SendPic> {
               color: Colors.black,
             ),
 
-            Text("Select a drink before sending", style: TextStyle(color: Colors.black),),
+            InkWell(
+                onTap: burgerPressed,
+                child: Text("Select a drink before sending", style: TextStyle(color: Colors.black),)),
 
             IconButton(
               onPressed: () {},
@@ -100,90 +119,101 @@ class _SendPicState extends State<SendPic> {
   void showMenu() {
     showModalBottomSheet(
         context: context,
+        backgroundColor: Colors.transparent,
         builder: (BuildContext context) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
-              ),
-              color: Theme.of(context).primaryColorDark,
+          return StatefulBuilder( builder: (context, modalSetState) {
+
+          return ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.0),
+              topRight: Radius.circular(16.0),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  height: 36,
-                ),
-                SizedBox(
-                    height: (56 * 6).toDouble(),
-                    child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16.0),
-                            topRight: Radius.circular(16.0),
+            child: Container(
+                color: Theme.of(context).primaryColorDark,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+                    height: 36,
+                  ),
+                  SizedBox(
+                      height: (56 * 6).toDouble(),
+                      child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(16.0),
+                              topRight: Radius.circular(16.0),
+                            ),
+                            color: Theme.of(context).primaryColor,
                           ),
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        child: Stack(
-                          alignment: Alignment(0, 0),
-                          overflow: Overflow.visible,
-                          children: <Widget>[
-                            Positioned(
-                              top: -36,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                    border: Border.all(
-                                        color: Theme.of(context).primaryColorDark, width: 10)),
-                                child: Center(
-                                  child: ClipOval(
-                                    child: Image.network(
-                                      "https://i.stack.imgur.com/S11YG.jpg?s=64&g=1",
-                                      fit: BoxFit.cover,
-                                      height: 36,
-                                      width: 36,
+                          child: Stack(
+                            alignment: Alignment(0, 0),
+                            overflow: Overflow.visible,
+                            children: <Widget>[
+                              Positioned(
+                                top: -36,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                      BorderRadius.all(Radius.circular(50)),
+                                      border: Border.all(
+                                          color: Theme.of(context).primaryColorDark, width: 10)),
+                                  child: Center(
+                                    child: ClipOval(
+                                      child: Image.network(
+                                        "https://i.stack.imgur.com/S11YG.jpg?s=64&g=1",
+                                        fit: BoxFit.cover,
+                                        height: 36,
+                                        width: 36,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              child: ListView(
-                                physics: NeverScrollableScrollPhysics(),
-                                children: <Widget>[
-                                  ListTile(
-                                    title: Text(
-                                      "Inbox",
-                                    ),
-                                    leading: Icon(
-                                      Icons.inbox,
-                                    ),
-                                    onTap: () {},
+
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 25),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: tempList.keys.length,
+                                      itemBuilder: (context, index) {
+                                        String drinkName = tempList.keys.elementAt(index);
+                                        return Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 5),
+                                          child: InkWell(
+                                            onTap: () {
+                                              modalSetState(() {
+                                                selectedDrink = drinkName;
+                                              });
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: selectedDrink == drinkName ? Theme.of(context).primaryColorDark : Theme.of(context).primaryColor,
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              width: 100,
+                                              child: Column(
+                                                children: [
+                                                  Text(drinkName),
+                                                  tempList.values.elementAt(index),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }),
                                   ),
-                                  ListTile(
-                                    title: Text(
-                                      "Starred",
-                                    ),
-                                    leading: Icon(
-                                      Icons.star_border,
-                                    ),
-                                    onTap: () {},
-                                  ),
+                            ],
+                          ))),
 
-                                ],
-                              ),
-                            )
-                          ],
-                        ))),
+                  getBottomBarComponents(() => Navigator.pop(context)),
 
-                getBottomBarComponents(() => Navigator.pop(context)),
-
-              ],
+                ],
+              ),
             ),
           );
+          });
         });
   }
 
