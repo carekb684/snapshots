@@ -10,6 +10,9 @@ import 'package:snap_shots/model/UserData.dart';
 import 'package:snap_shots/screens/send_pic.dart';
 
 class Camera extends StatefulWidget {
+  Camera({this.changePage});
+  Function changePage;
+
   @override
   _CameraState createState() => _CameraState();
 }
@@ -167,10 +170,8 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
   }
 
 
-
-
   void onClickUser() {
-
+    widget.changePage(0);
   }
 
   @override

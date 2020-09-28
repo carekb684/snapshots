@@ -219,6 +219,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  horizontal_blocked_scroll_physics:
+    dependency: "direct main"
+    description:
+      name: horizontal_blocked_scroll_physics
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   http:
     dependency: transitive
     description:
