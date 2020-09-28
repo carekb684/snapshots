@@ -10,12 +10,12 @@ class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return Home();
-    /*
+    //return Home();
+
     if (userSnapshot.connectionState == ConnectionState.active) {
       return userSnapshot.hasData ? Home() : Authenticate();
     }
-     */
+
     return Scaffold(
       body: Center(
         child: CircularProgressIndicator(),

@@ -5,6 +5,7 @@ import 'package:snap_shots/authentication/auth_widget_builder.dart';
 import 'package:snap_shots/authentication/auth_wrapper.dart';
 import 'package:snap_shots/screens/home.dart';
 import 'package:snap_shots/service/auth_service.dart';
+import 'package:snap_shots/service/firestore.dart';
 import 'package:snap_shots/util/color_from_hex.dart';
 
 void main() async {
@@ -17,7 +18,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Provider<AuthService>( create: (_) => AuthService(),
+    return MultiProvider(
+        providers: [
+          Provider<FirestoreService>(
+            create: (_) => FirestoreService(),
+          ),
+          Provider<AuthService>(
+            create: (_) => AuthService(),
+          ),
+        ],
       child: AuthWidgetBuilder( builder: (context, snapshot) {
         return MaterialApp(
             debugShowCheckedModeBanner: false,

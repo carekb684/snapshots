@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class SendPic extends StatefulWidget {
   SendPic({this.imagePath});
@@ -15,6 +16,7 @@ class SendPic extends StatefulWidget {
 class _SendPicState extends State<SendPic> {
 
   String selectedDrink = "";
+  ItemScrollController _scrollController = ItemScrollController();
 
   Map<String, Icon> tempList = {
     "Beer": Icon(Icons.local_drink, size: 40,),
@@ -68,7 +70,7 @@ class _SendPicState extends State<SendPic> {
 
             InkWell(
                 onTap: burgerPressed,
-                child: Text("Select a drink before sending", style: TextStyle(color: Colors.black),)),
+                child: Text(selectedDrink == "" ? "Select a drink before sending" : selectedDrink, style: TextStyle(color: Colors.black),)),
 
             IconButton(
               onPressed: () {},
@@ -123,23 +125,25 @@ class _SendPicState extends State<SendPic> {
         builder: (BuildContext context) {
           return StatefulBuilder( builder: (context, modalSetState) {
 
-          return ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16.0),
-              topRight: Radius.circular(16.0),
-            ),
-            child: Container(
-                color: Theme.of(context).primaryColorDark,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Container(
-                    height: 36,
-                  ),
-                  SizedBox(
-                      height: (56 * 6).toDouble(),
-                      child: Container(
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0),
+                ),
+                child: Container(
+                    color: Theme.of(context).primaryColorDark,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Container(
+                        height: 36,
+                      ),
+                      Container(
+                        height: (56 * 6).toDouble(),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(16.0),
@@ -147,34 +151,42 @@ class _SendPicState extends State<SendPic> {
                             ),
                             color: Theme.of(context).primaryColor,
                           ),
-                          child: Stack(
-                            alignment: Alignment(0, 0),
-                            overflow: Overflow.visible,
-                            children: <Widget>[
-                              Positioned(
-                                top: -36,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.all(Radius.circular(50)),
-                                      border: Border.all(
-                                          color: Theme.of(context).primaryColorDark, width: 10)),
-                                  child: Center(
-                                    child: ClipOval(
-                                      child: Image.network(
-                                        "https://i.stack.imgur.com/S11YG.jpg?s=64&g=1",
-                                        fit: BoxFit.cover,
-                                        height: 36,
-                                        width: 36,
+                          child: Column(
+                            children: [
+                              Stack(
+                                alignment: Alignment(0, 0),
+                                overflow: Overflow.visible,
+                                children: <Widget>[
+                                  Positioned(
+                                    top: -36,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.all(Radius.circular(50)),
+                                          border: Border.all(
+                                              color: Theme.of(context).primaryColorDark, width: 10)),
+                                      child: Center(
+                                        child: ClipOval(
+                                          child: Image.network(
+                                            "https://i.stack.imgur.com/S11YG.jpg?s=64&g=1",
+                                            fit: BoxFit.cover,
+                                            height: 36,
+                                            width: 36,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
+                                  Text(""),
+                                ],
                               ),
 
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 25),
-                                    child: ListView.builder(
+                              Padding(
+                                padding: EdgeInsets.only(top: 25),
+                                child: SizedBox(
+                                  height: 100,
+                                  child: ScrollablePositionedList.builder(
+                                      itemScrollController: _scrollController,
                                       scrollDirection: Axis.horizontal,
                                       itemCount: tempList.keys.length,
                                       itemBuilder: (context, index) {
@@ -183,8 +195,14 @@ class _SendPicState extends State<SendPic> {
                                           padding: EdgeInsets.symmetric(horizontal: 5),
                                           child: InkWell(
                                             onTap: () {
+
                                               modalSetState(() {
-                                                selectedDrink = drinkName;
+                                                setState(() {
+                                                  selectedDrink = drinkName;
+                                                  _scrollController.scrollTo(
+                                                      index: index, duration: Duration(milliseconds: 500),
+                                                      alignment: 0.365 );
+                                                });
                                               });
                                             },
                                             child: Container(
@@ -194,24 +212,35 @@ class _SendPicState extends State<SendPic> {
                                               ),
                                               width: 100,
                                               child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   Text(drinkName),
                                                   tempList.values.elementAt(index),
+                                                  Text(""),
                                                 ],
                                               ),
                                             ),
                                           ),
                                         );
                                       }),
-                                  ),
+                                ),
+                              ),
+
+
+                              Text("asdasd"),
+                              Text("asdasd"),
                             ],
-                          ))),
+                          ),
+                      ),
 
-                  getBottomBarComponents(() => Navigator.pop(context)),
 
-                ],
+
+                    ],
+                  ),
+                ),
               ),
-            ),
+              getBottomBarComponents(() => Navigator.pop(context)),
+            ],
           );
           });
         });

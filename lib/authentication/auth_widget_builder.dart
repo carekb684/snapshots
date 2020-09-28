@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snap_shots/model/LoggedUser.dart';
+import 'package:snap_shots/model/UserData.dart';
+import 'package:snap_shots/serializer/fire_serialize.dart';
 import 'package:snap_shots/service/auth_service.dart';
 import 'package:snap_shots/service/firestore.dart';
 
@@ -20,6 +22,10 @@ class _AuthWidgetBuilderState extends State<AuthWidgetBuilder> {
   LoggedUser user;
   FirestoreService fireServ;
 
+  UserData userData = null;
+
+  bool runOnce = true;
+
   @override
   void initState() {
     super.initState();
@@ -34,28 +40,34 @@ class _AuthWidgetBuilderState extends State<AuthWidgetBuilder> {
       builder: (context, snapshot) {
         print('StreamBuilder: ${snapshot.connectionState}');
         user = snapshot.data;
-        if (user != null ) {
-          addUserFirestore(user);
-
-          return MultiProvider(
-            providers: [
-              Provider<LoggedUser>.value(value: user),
-              Provider<FirestoreService>(
-                create: (_) => fireServ,
-              ),
-            ],
-            child: widget.builder(context, snapshot),
-          );
+        if (user != null && runOnce) {
+          getUserFirestore(user);
+          runOnce = false;
         }
+          if (userData != null) {
+            return MultiProvider(
+              providers: [
+                Provider<UserData>.value(value: userData),
+              ],
+              child: widget.builder(context, snapshot),
+            );
+          }
+
 
         return widget.builder(context, snapshot);
       },
     );
   }
 
-  addUserFirestore(LoggedUser user) {
-    fireServ = FirestoreService(loggedUid: user.uid);
-    fireServ.addUser(user);
+  getUserFirestore(LoggedUser user) {
+    fireServ = FirestoreService();
+    fireServ.getUser(user.uid).then((value) {
+      var map = value.data();
+      setState(() {
+        userData = FireSerialize.toUserData(map);
+      });
+
+    });
   }
 
 }

@@ -32,6 +32,9 @@ dependencies:
   provider: ^3.1.0
   camera: ^0.5.8+7
   path_provider: ^1.6.18
+  scrollable_positioned_list: ^0.1.7
+  simple_animations: ^2.2.2
+  #mail_validator: ^1.0.5
 
 
   # The following adds the Cupertino Icons font to your application.
