@@ -16,7 +16,7 @@ class Camera extends StatefulWidget {
 
 
 
-class _CameraState extends State<Camera> {
+class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Camera>{
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<CameraDescription> cameras;
@@ -136,14 +136,26 @@ class _CameraState extends State<Camera> {
         Positioned(
           left: 5, top:5,
           child: SafeArea(
-            child: ClipOval(
-              child: CachedNetworkImage(
-                width: 50,
-                height: 50,
-                imageUrl: userData.photo == null ? "" : userData.photo,
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(Icons.supervised_user_circle),
-                fit: BoxFit.fill,
+            child: Container(
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(50 / 2)),
+                border: Border.all(
+                  color: Colors.white,
+                  width: 4.0,
+                ),
+                ),
+              child: ClipOval(
+                child: InkWell(
+                  onTap: onClickUser,
+                  child: CachedNetworkImage(
+                    imageUrl: userData.photo == null ? "https://i.imgur.com/5EPUiFp.jpg" : userData.photo,
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/avatar.png"), fit: BoxFit.fill)),),
+                    fit: BoxFit.fill,
+                  ),
+                ),
               ),
             ),
 
@@ -156,4 +168,11 @@ class _CameraState extends State<Camera> {
 
 
 
+
+  void onClickUser() {
+
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
