@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snap_shots/model/LoggedUser.dart';
 import 'package:snap_shots/model/UserData.dart';
+import 'package:snap_shots/screens/util/loading.dart';
 import 'package:snap_shots/serializer/fire_serialize.dart';
 import 'package:snap_shots/service/auth_service.dart';
 import 'package:snap_shots/service/firestore.dart';
@@ -44,6 +45,12 @@ class _AuthWidgetBuilderState extends State<AuthWidgetBuilder> {
           getUserFirestore(user);
           runOnce = false;
         }
+
+        if (userData == null && user != null && !runOnce) {
+          //need to wait for userData to load
+          return Container();
+        }
+
           if (userData != null) {
             return MultiProvider(
               providers: [

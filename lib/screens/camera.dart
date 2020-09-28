@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:snap_shots/model/UserData.dart';
 import 'package:snap_shots/screens/send_pic.dart';
 
 class Camera extends StatefulWidget {
@@ -22,6 +25,8 @@ class _CameraState extends State<Camera> {
   String imagePath;
   File imgFile;
 
+  UserData userData;
+
   @override
   void dispose() {
     super.dispose();
@@ -31,7 +36,6 @@ class _CameraState extends State<Camera> {
   @override
   void initState() {
     super.initState();
-
     availableCameras().then((value){
       cameras = value;
       controller = CameraController(cameras[0], ResolutionPreset.medium);
@@ -42,7 +46,12 @@ class _CameraState extends State<Camera> {
         setState(() {});
       });
     });
+  }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    userData = Provider.of<UserData>(context);
   }
 
   @override
@@ -123,6 +132,23 @@ class _CameraState extends State<Camera> {
                 onPressed: onTakePictureButtonPressed,
               )),
         ),
+
+        Positioned(
+          left: 5, top:5,
+          child: SafeArea(
+            child: ClipOval(
+              child: CachedNetworkImage(
+                width: 50,
+                height: 50,
+                imageUrl: userData.photo == null ? "" : userData.photo,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.supervised_user_circle),
+                fit: BoxFit.fill,
+              ),
+            ),
+
+          ),
+        )
 
       ],
     );

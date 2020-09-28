@@ -35,6 +35,7 @@ dependencies:
   scrollable_positioned_list: ^0.1.7
   simple_animations: ^2.2.2
   #mail_validator: ^1.0.5
+  cached_network_image: ^2.2.0+1
 
 
   # The following adds the Cupertino Icons font to your application.

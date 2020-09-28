@@ -76,6 +76,7 @@ class _AuthenticateState extends State<Authenticate> {
                     child: TextFormField(
                       //validator: ,
                       onSaved: (value) => email = value,
+                      onFieldSubmitted: (value) => onLoginTap(),
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Email",
@@ -87,6 +88,7 @@ class _AuthenticateState extends State<Authenticate> {
                   Container(
                     padding: EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 20),
                     child: TextFormField(
+                      onFieldSubmitted: (value) => onLoginTap(),
                       validator: (value) => value.isEmpty ? "Please enter a password" : null,
                       onSaved: (value) => password = value,
                       obscureText: true,
