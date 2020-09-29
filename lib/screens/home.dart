@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:snap_shots/screens/camera.dart';
 import 'package:snap_shots/screens/left_temp.dart';
 import 'package:snap_shots/screens/right_temp.dart';
-import 'package:snap_shots/screens/top_temp.dart';
+import 'package:snap_shots/screens/top_user.dart';
 
 
 class Home extends StatefulWidget {
@@ -50,14 +50,14 @@ class CameraPageView extends StatelessWidget {
       scrollDirection: Axis.vertical,
       controller: verticalController,
       children: [
-        TopTemp(), // 0
+        TopUser(changePage: animateToPage), // 0
         Camera(changePage: animateToPage), // 1
       ],
     );
   }
 
   void animateToPage(int pageNr) {
-    verticalController.animateToPage(pageNr, duration: Duration(milliseconds: 700), curve: Curves.ease);
+    verticalController.animateToPage(pageNr, duration: Duration(milliseconds: 600), curve: Curves.ease);
   }
 
   void pageChanged(int value) {

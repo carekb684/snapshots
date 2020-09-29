@@ -153,7 +153,7 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
                 child: InkWell(
                   onTap: onClickUser,
                   child: CachedNetworkImage(
-                    imageUrl: userData.photo == null ? "https://i.imgur.com/5EPUiFp.jpg" : userData.photo,
+                    imageUrl: userData.photo == null ? "" : userData.photo,
                     placeholder: (context, url) => CircularProgressIndicator(),
                     errorWidget: (context, url, error) => Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/avatar.png"), fit: BoxFit.fill)),),
                     fit: BoxFit.fill,

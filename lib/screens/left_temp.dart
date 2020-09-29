@@ -10,12 +10,10 @@ class LeftTemp extends StatefulWidget {
 
 class _LeftTempState extends State<LeftTemp> {
 
-  AuthService auth;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    auth = Provider.of<AuthService>(context);
   }
 
   @override
@@ -26,15 +24,10 @@ class _LeftTempState extends State<LeftTemp> {
               children: [
                 Text("left"),
                 SizedBox(height: 40),
-                InkWell(
-                  onTap: signOut,
-                  child: Text("Sign out"),
-                )
+
               ],
             )));
   }
 
-  void signOut() {
-    auth.signOut();
-  }
+
 }

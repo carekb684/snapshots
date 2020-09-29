@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:snap_shots/model/UserData.dart';
 
 class SendPic extends StatefulWidget {
   SendPic({this.imagePath});
@@ -31,6 +33,14 @@ class _SendPicState extends State<SendPic> {
     "Water": Icon(Icons.local_drink, size: 40),
     "P2": Icon(Icons.local_drink, size: 40),
   };
+
+  UserData userData;
+
+  @override
+  void didChangeDependencies() {
+    userData = Provider.of<UserData>(context);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +178,7 @@ class _SendPicState extends State<SendPic> {
                                       child: Center(
                                         child: ClipOval(
                                           child: Image.network(
-                                            "https://i.stack.imgur.com/S11YG.jpg?s=64&g=1",
+                                            userData.photo == null ? "" : userData.photo,
                                             fit: BoxFit.cover,
                                             height: 36,
                                             width: 36,

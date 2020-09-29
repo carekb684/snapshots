@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:snap_shots/authentication/auth_widget_builder.dart';
 import 'package:snap_shots/authentication/auth_wrapper.dart';
@@ -10,14 +12,24 @@ import 'package:snap_shots/util/color_from_hex.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MyApp());
+  FirebaseApp app = await Firebase.initializeApp();
+  FirebaseStorage storage = FirebaseStorage(
+      app: app, storageBucket: 'gs://snapshots-46f41.appspot.com');
+
+  runApp(MyApp(storage: storage));
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  MyApp({this.storage});
+  FirebaseStorage storage;
+
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     return MultiProvider(
         providers: [
           Provider<FirestoreService>(
@@ -25,6 +37,9 @@ class MyApp extends StatelessWidget {
           ),
           Provider<AuthService>(
             create: (_) => AuthService(),
+          ),
+          Provider<FirebaseStorage>(
+            create: (_) => storage,
           ),
         ],
       child: AuthWidgetBuilder( builder: (context, snapshot) {
