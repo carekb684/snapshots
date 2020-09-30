@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-import 'package:snap_shots/model/LoggedUser.dart';
 import 'package:snap_shots/model/UserData.dart';
 
 
@@ -21,6 +19,52 @@ class FirestoreService {
 
   Future<DocumentSnapshot> getUser(String uid) {
     return firestore.collection("users").doc(uid).get();
+  }
+
+  Future<QuerySnapshot> getAllUserByUserName(String username) {
+    return firestore.collection("users").where("username", isEqualTo: username).get();
+  }
+
+  //request is sent to targets docId
+  Future<void> sendFriendRequest(String targetId, String loggedUid) {
+    var ref = firestore.collection("friendrequests").doc(targetId);
+    ref.set({}, SetOptions(merge:true));
+
+    Map data = <String, dynamic>{"from": loggedUid, "accepted": false,};
+    return firestore.collection("friendrequests").doc(targetId).update({"uids" : FieldValue.arrayUnion([data])});
+  }
+
+  // no entry == friend request deleted
+  // accepted = false not yet accepted
+  // accepted = friends
+  Future<DocumentSnapshot> getFriendStatus(String targetId) {
+    return firestore.collection("friendrequests").doc(targetId).get();
+  }
+
+  Future<void> acceptFriendRequest(String myId, String requesterId) {
+    //update request
+    firestore.collection("friendrequests").doc(myId).update({"uids" : FieldValue.arrayRemove([{"from" : requesterId, "accepted" : false}])});
+    firestore.collection("friendrequests").doc(myId).update({"uids" : FieldValue.arrayUnion([{"from" : requesterId, "accepted" : true}])});
+
+    // add to requester list
+    var friendRef = firestore.collection("users").doc(requesterId).collection("friendlist").doc(requesterId);
+    friendRef.set({}, SetOptions(merge:true));
+    firestore.collection("users").doc(requesterId).collection("friendlist").doc(requesterId).update({"uids" : FieldValue.arrayUnion([myId])});
+
+    // add to my list
+    var ref = firestore.collection("users").doc(myId).collection("friendlist").doc(myId);
+    ref.set({}, SetOptions(merge:true));
+    return firestore.collection("users").doc(myId).collection("friendlist").doc(myId).update({"uids" : FieldValue.arrayUnion([requesterId])});
+  }
+
+  Future<void> denyFriendRequest(String myId, String requesterId) {
+    //update request
+    return firestore.collection("friendrequests").doc(myId).update({"uids" : FieldValue.arrayRemove([{"from" : requesterId, "accepted" : false}])});
+  }
+
+  Future<DocumentSnapshot> getFriends(String myId) {
+    return firestore.collection("users").doc(myId).collection("friendlist").doc(myId).get();
+
   }
 
 }

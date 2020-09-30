@@ -8,6 +8,8 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:snap_shots/model/UserData.dart';
+import 'package:snap_shots/screens/add_friends.dart';
+import 'package:snap_shots/screens/manage_friends.dart';
 import 'package:snap_shots/service/auth_service.dart';
 import 'package:snap_shots/service/firestore.dart';
 import 'package:snap_shots/util/center_row_with_side_icon.dart';
@@ -35,8 +37,9 @@ class _TopUserState extends State<TopUser> {
   @override
   void initState() {
     super.initState();
+
     KeyboardVisibility.onChange.listen((bool visible) {
-     if (!visible) FocusScope.of(context).unfocus(); //if keyboard dismiss remove focus from textField
+      if (!visible && context != null) FocusScope.of(context).unfocus(); //if keyboard dismiss remove focus from textField
     });
   }
 
@@ -53,7 +56,6 @@ class _TopUserState extends State<TopUser> {
 
   @override
   Widget build(BuildContext context) {
-
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -115,24 +117,36 @@ class _TopUserState extends State<TopUser> {
                           ),
 
                           SizedBox(height: 10,),
+
                           TextField(
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(border: InputBorder.none),
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                            controller: displayNameController,
-                            onSubmitted: onSubmitDisplayName,
-                          ),
-                          //Text(userData.displayName, style: TextStyle(fontWeight: FontWeight.bold)),
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(border: InputBorder.none),
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              controller: displayNameController,
+                              onSubmitted: onSubmitDisplayName,
+                            ),
 
                         ],
                       ),
                   ),
                   SizedBox(height: 20),
 
-                  CenterRowSideIcon(
-                    text: Text("Add friends", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                    icon: Icon(Icons.supervised_user_circle, size: 30,),
-                    iconLeftSide: true,
+                  InkWell(
+                    onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (BuildContext context) => AddFriends())),
+                    child: CenterRowSideIcon(
+                      text: Text("Add friends", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                      icon: Icon(Icons.person_add, size: 30,),
+                      iconLeftSide: true,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  InkWell(
+                    onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (BuildContext context) => ManageFriends())),
+                    child: CenterRowSideIcon(
+                      text: Text("Manage friends", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                      icon: Icon(Icons.supervised_user_circle, size: 30,),
+                      iconLeftSide: true,
+                    ),
                   ),
 
                   SizedBox(height: 40),
@@ -202,5 +216,6 @@ class _TopUserState extends State<TopUser> {
   void showInSnackBar(String message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message), ));
   }
+
 
 }

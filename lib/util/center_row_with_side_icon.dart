@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class CenterRowSideIcon extends StatelessWidget {
 
-  CenterRowSideIcon({this.text, this.icon, this.iconLeftSide});
-  Text text;
+  CenterRowSideIcon({this.text, this.icon, this.iconLeftSide, this.mirrorIcon = false});
+  Widget text;
   Icon icon;
   bool iconLeftSide;
+  bool mirrorIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class CenterRowSideIcon extends StatelessWidget {
           alignment: AlignmentDirectional.centerEnd,
           child: Padding(
             padding:  EdgeInsets.only(right: 4),
-            child: icon,
+            child: getIcon(),
           )
       ),
     ) : Spacer();
@@ -40,9 +42,21 @@ class CenterRowSideIcon extends StatelessWidget {
           alignment: AlignmentDirectional.centerEnd,
           child: Padding(
             padding:  EdgeInsets.only(right: 4),
-            child: icon,
+            child: getIcon(),
           )
       ),
     );
+  }
+
+  Widget getIcon() {
+
+    if( mirrorIcon) {
+      return Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.rotationY(math.pi),
+        child: icon,
+      );
+    }
+    return icon;
   }
 }

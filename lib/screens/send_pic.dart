@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -177,8 +178,8 @@ class _SendPicState extends State<SendPic> {
                                               color: Theme.of(context).primaryColorDark, width: 10)),
                                       child: Center(
                                         child: ClipOval(
-                                          child: Image.network(
-                                            userData.photo == null ? "" : userData.photo,
+                                          child: CachedNetworkImage(
+                                            imageUrl: userData.photo == null ? "" : userData.photo,
                                             fit: BoxFit.cover,
                                             height: 36,
                                             width: 36,

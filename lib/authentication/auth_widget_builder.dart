@@ -41,6 +41,10 @@ class _AuthWidgetBuilderState extends State<AuthWidgetBuilder> {
       builder: (context, snapshot) {
         print('StreamBuilder: ${snapshot.connectionState}');
         user = snapshot.data;
+        if (user == null) {
+          runOnce = true;
+          userData = null;
+        }
         if (user != null && runOnce) {
           getUserFirestore(user);
           runOnce = false;
