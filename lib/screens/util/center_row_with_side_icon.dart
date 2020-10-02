@@ -5,7 +5,7 @@ class CenterRowSideIcon extends StatelessWidget {
 
   CenterRowSideIcon({this.text, this.icon, this.iconLeftSide, this.mirrorIcon = false});
   Widget text;
-  Icon icon;
+  Widget icon;
   bool iconLeftSide;
   bool mirrorIcon;
 

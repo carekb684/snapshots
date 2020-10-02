@@ -10,9 +10,9 @@ import 'package:provider/provider.dart';
 import 'package:snap_shots/model/UserData.dart';
 import 'package:snap_shots/screens/add_friends.dart';
 import 'package:snap_shots/screens/manage_friends.dart';
+import 'package:snap_shots/screens/util/center_row_with_side_icon.dart';
 import 'package:snap_shots/service/auth_service.dart';
 import 'package:snap_shots/service/firestore.dart';
-import 'package:snap_shots/util/center_row_with_side_icon.dart';
 
 class TopUser extends StatefulWidget {
   TopUser({this.changePage});
@@ -34,6 +34,9 @@ class _TopUserState extends State<TopUser> {
   FirestoreService fireServ;
   AuthService auth;
 
+
+  int nrOfRequests = 0;
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +55,8 @@ class _TopUserState extends State<TopUser> {
     storage = Provider.of<FirebaseStorage>(context);
     fireServ = Provider.of<FirestoreService>(context);
     auth = Provider.of<AuthService>(context);
+
+    getFriendRequestNr();
   }
 
   @override
@@ -152,7 +157,7 @@ class _TopUserState extends State<TopUser> {
                       onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (BuildContext context) => ManageFriends())),
                       child: CenterRowSideIcon(
                         text: Text("Manage friends", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                        icon: Icon(Icons.supervised_user_circle, size: 30,),
+                        icon: getManageFriendsIcon(),
                         iconLeftSide: true,
                       ),
                     ),
@@ -229,4 +234,40 @@ class _TopUserState extends State<TopUser> {
     widget.changePage(1);
     return Future.value(false);
   }
+
+  void getFriendRequestNr() {
+    fireServ.getFriendStatus(userData.uid).then((value) {
+      List<String> requests = [];
+      if (value.data() != null) {
+        var maps = value.data()["uids"];
+        for(dynamic map in maps) {
+          if(map["accepted"] == false) requests.add(map["from"]);
+        }
+      }
+      setState(() {
+        nrOfRequests = requests.length;
+      });
+    });
+  }
+
+  Widget getManageFriendsIcon() {
+    if(nrOfRequests > 0) {
+      return Stack(
+          children : [
+            Icon(Icons.supervised_user_circle, size: 30,),
+            UnconstrainedBox(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(3),
+                  color: Colors.red,
+                ),
+                child: Center(child: Text(nrOfRequests.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)),
+              ),
+            )
+          ]);
+    } else {
+      return Icon(Icons.supervised_user_circle, size: 30,);
+  }
+  }
+
 }

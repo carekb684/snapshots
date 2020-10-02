@@ -23,6 +23,8 @@ class _SendPicState extends State<SendPic> {
   String selectedDrink = "";
   ItemScrollController _scrollController = ItemScrollController();
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   Map<String, Icon> tempList = {
     "Beer": Icon(Icons.local_drink, size: 40,),
     "Red wine": Icon(Icons.local_drink, size: 40),
@@ -52,6 +54,7 @@ class _SendPicState extends State<SendPic> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         body: getImageView(),
         bottomNavigationBar: createBottomBar()
     );
@@ -67,12 +70,12 @@ class _SendPicState extends State<SendPic> {
       },
       child: BottomAppBar(
         elevation: 0,
-        child: getBottomBarComponents(showMenu),
+        child: getBottomBarComponents(showMenu, false),
       ),
     );
   }
 
-  Widget getBottomBarComponents(Function burgerPressed) {
+  Widget getBottomBarComponents(Function burgerPressed, bool menuOpen) {
     return Container(
       color: Theme.of(context).accentColor,
       padding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -90,8 +93,8 @@ class _SendPicState extends State<SendPic> {
                 child: Text(selectedDrink == "" ? "Select a drink before sending" : selectedDrink, style: TextStyle(color: Colors.black),)),
 
             IconButton(
-              onPressed: onTapSend,
-              icon: Icon(Icons.send),
+              onPressed: () => onTapSend(menuOpen),
+              icon: Icon(Icons.send, color: selectedDrink.isEmpty ? Colors.black26 : Colors.black),
               color: Colors.black,
             )
           ]),
@@ -116,7 +119,7 @@ class _SendPicState extends State<SendPic> {
                   child: IconButton(
                     icon: Icon(Icons.close, color: Colors.white),
                     iconSize: 25,
-                    onPressed: deleteImageAndClose,
+                    onPressed: () => deleteImageAndClose(false),
                   )
               ),
             ),
@@ -130,9 +133,10 @@ class _SendPicState extends State<SendPic> {
     return widget.imgFile;
   }
 
-  void deleteImageAndClose() {
+  void deleteImageAndClose(bool doublePop) {
     widget.imgFile.deleteSync();
     Navigator.pop(context);
+    if (doublePop) Navigator.pop(context);
   }
 
   void showMenu() {
@@ -256,17 +260,20 @@ class _SendPicState extends State<SendPic> {
                   ),
                 ),
               ),
-              getBottomBarComponents(() => Navigator.pop(context)),
+              getBottomBarComponents(() => Navigator.pop(context), true),
             ],
           );
           });
         });
   }
 
+  void showInSnackBar(String message) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
+  }
 
-
-  void onTapSend() {
+  void onTapSend(bool menuOpen) {
     if (selectedDrink.isEmpty) {
+      showInSnackBar("Select a drink before sending");
       return;
     }
 
@@ -284,7 +291,7 @@ class _SendPicState extends State<SendPic> {
     uploadTask.onComplete.then((value) async {
       String url = await value.ref.getDownloadURL();
       fireServ.uploadInboxUrl(userData.uid, url, dateNow, selectedDrink);
-      deleteImageAndClose();
+      deleteImageAndClose(menuOpen);
     });
 
 

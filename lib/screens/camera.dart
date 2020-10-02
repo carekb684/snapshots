@@ -70,7 +70,9 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
 
     return Scaffold(
       key: _scaffoldKey,
-      body: getCameraView(),
+      body: GestureDetector(
+          onDoubleTap: toggleCameraView,
+          child: getCameraView()),
     );
 
   }
@@ -186,7 +188,7 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
                   color: Colors.black.withOpacity(0.3),
                 ),
                 child: IconButton(
-                  icon: Icon(Icons.switch_camera, color: Colors.white),
+                  icon: Icon(Icons.repeat, color: Colors.white),
                   iconSize: 25,
                   onPressed: toggleCameraView,
                 )
