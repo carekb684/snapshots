@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:snap_shots/inherited_widgets/number_of_requests.dart';
 import 'package:snap_shots/model/UserData.dart';
 import 'package:snap_shots/screens/add_friends.dart';
 import 'package:snap_shots/screens/manage_friends.dart';
@@ -33,9 +34,7 @@ class _TopUserState extends State<TopUser> {
   FirebaseStorage storage;
   FirestoreService fireServ;
   AuthService auth;
-
-
-  int nrOfRequests = 0;
+  NrOfRequests nrOfRequests;
 
   @override
   void initState() {
@@ -44,19 +43,19 @@ class _TopUserState extends State<TopUser> {
     KeyboardVisibility.onChange.listen((bool visible) {
       if (!visible && context != null) FocusScope.of(context).unfocus(); //if keyboard dismiss remove focus from textField
     });
-  }
+    }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     userData = Provider.of<UserData>(context);
+    nrOfRequests = Provider.of<NrOfRequests>(context);
     displayNameController =  new TextEditingController(text: userData.displayName);
 
     storage = Provider.of<FirebaseStorage>(context);
     fireServ = Provider.of<FirestoreService>(context);
     auth = Provider.of<AuthService>(context);
 
-    getFriendRequestNr();
   }
 
   @override
@@ -157,7 +156,7 @@ class _TopUserState extends State<TopUser> {
                       onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (BuildContext context) => ManageFriends())),
                       child: CenterRowSideIcon(
                         text: Text("Manage friends", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                        icon: getManageFriendsIcon(),
+                        icon: nrOfRequests?.getFriendReqIcon(Icon(Icons.supervised_user_circle, size: 30,),),
                         iconLeftSide: true,
                       ),
                     ),
@@ -233,41 +232,6 @@ class _TopUserState extends State<TopUser> {
   Future<bool> onBackButtonPress() {
     widget.changePage(1);
     return Future.value(false);
-  }
-
-  void getFriendRequestNr() {
-    fireServ.getFriendStatus(userData.uid).then((value) {
-      List<String> requests = [];
-      if (value.data() != null) {
-        var maps = value.data()["uids"];
-        for(dynamic map in maps) {
-          if(map["accepted"] == false) requests.add(map["from"]);
-        }
-      }
-      setState(() {
-        nrOfRequests = requests.length;
-      });
-    });
-  }
-
-  Widget getManageFriendsIcon() {
-    if(nrOfRequests > 0) {
-      return Stack(
-          children : [
-            Icon(Icons.supervised_user_circle, size: 30,),
-            UnconstrainedBox(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(3),
-                  color: Colors.red,
-                ),
-                child: Center(child: Text(nrOfRequests.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)),
-              ),
-            )
-          ]);
-    } else {
-      return Icon(Icons.supervised_user_circle, size: 30,);
-  }
   }
 
 }

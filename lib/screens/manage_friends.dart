@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snap_shots/animations/fade_in.dart';
+import 'package:snap_shots/inherited_widgets/number_of_requests.dart';
 import 'package:snap_shots/model/UserData.dart';
 import 'package:snap_shots/serializer/fire_serialize.dart';
 import 'package:snap_shots/service/firestore.dart';
@@ -16,6 +17,7 @@ class ManageFriends extends StatefulWidget {
 class _ManageFriendsState extends State<ManageFriends> {
   UserData userData;
   FirestoreService fireServ;
+  NrOfRequests nrOfRequests;
 
   Future<List<DocumentSnapshot>> fUserRequests;
   List<UserData> userRequests;
@@ -26,11 +28,14 @@ class _ManageFriendsState extends State<ManageFriends> {
   bool friendsRunOnce = true;
 
 
+
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     userData = Provider.of<UserData>(context);
     fireServ = Provider.of<FirestoreService>(context);
+    nrOfRequests = Provider.of<NrOfRequests>(context);
 
     getFriendRequests();
     getFriends();
@@ -160,7 +165,7 @@ class _ManageFriendsState extends State<ManageFriends> {
                           child: CachedNetworkImage(
                             width: 50,
                             height: 50,
-                            imageUrl: user.photo,
+                            imageUrl: user.photo ?? "",
                             placeholder: (context, url) => CircularProgressIndicator(),
                             errorWidget: (context, url, error) => Icon(Icons.error),
                             fit: BoxFit.fill,
@@ -222,6 +227,7 @@ class _ManageFriendsState extends State<ManageFriends> {
   void onAcceptRequest(int index) {
     fireServ.acceptFriendRequest(userData.uid, userRequests[index].uid).then((value) {
 
+      nrOfRequests.decrement();
       //Todo: Maybe i can just add friend offline to local list instead of retrieving?
       //getFriends() will run setState()
       friendsRunOnce = true;
@@ -232,6 +238,8 @@ class _ManageFriendsState extends State<ManageFriends> {
 
   void onDenyRequest(int index) {
     fireServ.denyFriendRequest(userData.uid, userRequests[index].uid).then((value)  {
+      nrOfRequests.decrement();
+
       setState(() {
         userRequests.removeAt(index);
       });
@@ -296,7 +304,7 @@ class _ManageFriendsState extends State<ManageFriends> {
                         child: CachedNetworkImage(
                           width: 50,
                           height: 50,
-                          imageUrl: user.photo,
+                          imageUrl: user.photo ?? "",
                           placeholder: (context, url) => CircularProgressIndicator(),
                           errorWidget: (context, url, error) => Icon(Icons.error),
                           fit: BoxFit.fill,
@@ -312,10 +320,5 @@ class _ManageFriendsState extends State<ManageFriends> {
         ],),
     );
   }
-
-
-
-
-
 
 }

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:snap_shots/inherited_widgets/number_of_requests.dart';
 import 'package:snap_shots/model/UserData.dart';
 import 'package:snap_shots/screens/send_pic.dart';
 
@@ -34,6 +35,8 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
 
   FlutterFFmpeg _FFmpeg = new FlutterFFmpeg();
 
+  NrOfRequests nrOfRequests;
+
   @override
   void dispose() {
     super.dispose();
@@ -43,6 +46,13 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
   @override
   void initState() {
     super.initState();
+
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      nrOfRequests = Provider.of<NrOfRequests>(context);
+      nrOfRequests.updateNrOfRequests();
+    });
+
     availableCameras().then((value){
       cameras = value;
       controller = CameraController(cameras[cameraView], ResolutionPreset.veryHigh);
@@ -154,24 +164,26 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
         Positioned(
           left: 10, top:10,
           child: SafeArea(
-            child: Container(
-              height: 50,
-              width: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(50 / 2)),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 4.0,
-                ),
-                ),
-              child: ClipOval(
-                child: InkWell(
-                  onTap: onClickUser,
-                  child: CachedNetworkImage(
-                    imageUrl: userData.photo == null ? "" : userData.photo,
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/avatar.png"), fit: BoxFit.fill)),),
-                    fit: BoxFit.fill,
+            child: nrOfRequests?.getFriendReqIcon(
+              Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(50 / 2)),
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 4.0,
+                  ),
+                  ),
+                child: ClipOval(
+                  child: InkWell(
+                    onTap: onClickUser,
+                    child: CachedNetworkImage(
+                      imageUrl: userData.photo == null ? "" : userData.photo,
+                      placeholder: (context, url) => CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/avatar.png"), fit: BoxFit.fill)),),
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
               ),

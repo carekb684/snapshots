@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:snap_shots/inherited_widgets/number_of_requests.dart';
 import 'package:snap_shots/model/LoggedUser.dart';
 import 'package:snap_shots/model/UserData.dart';
 import 'package:snap_shots/screens/util/loading.dart';
@@ -59,6 +60,7 @@ class _AuthWidgetBuilderState extends State<AuthWidgetBuilder> {
             return MultiProvider(
               providers: [
                 Provider<UserData>.value(value: userData),
+                ChangeNotifierProvider<NrOfRequests>( create: (_) => NrOfRequests(uid: userData.uid, fireServ: fireServ)),
               ],
               child: widget.builder(context, snapshot),
             );
@@ -71,6 +73,7 @@ class _AuthWidgetBuilderState extends State<AuthWidgetBuilder> {
   }
 
   getUserFirestore(LoggedUser user) {
+    //TODO SHOULD USE PROVIDER
     fireServ = FirestoreService();
     fireServ.getUser(user.uid).then((value) {
       var map = value.data();

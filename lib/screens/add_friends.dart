@@ -95,7 +95,7 @@ class _AddFriendsState extends State<AddFriends> {
                   if (snapshot.data.docs.isEmpty) {
                     return Text(
                       "No users found :(",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.black),
                     );
                   }
 
@@ -148,7 +148,7 @@ class _AddFriendsState extends State<AddFriends> {
                       child: CachedNetworkImage(
                         width: 50,
                         height: 50,
-                        imageUrl: user.photo,
+                        imageUrl: user.photo ?? "",
                         placeholder: (context, url) => CircularProgressIndicator(),
                         errorWidget: (context, url, error) => Icon(Icons.error),
                         fit: BoxFit.fill,
