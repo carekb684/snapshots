@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:snap_shots/model/UserData.dart';
@@ -24,11 +25,14 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<CameraDescription> cameras;
   CameraController controller;
+  int cameraView = 0; // 0 == normal, 1 == selfie.
 
   String imagePath;
   File imgFile;
 
   UserData userData;
+
+  FlutterFFmpeg _FFmpeg = new FlutterFFmpeg();
 
   @override
   void dispose() {
@@ -41,7 +45,7 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
     super.initState();
     availableCameras().then((value){
       cameras = value;
-      controller = CameraController(cameras[0], ResolutionPreset.medium);
+      controller = CameraController(cameras[cameraView], ResolutionPreset.veryHigh);
       controller.initialize().then((_) {
         if (!mounted) {
           return;
@@ -86,7 +90,7 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
     final Directory extDir = await getApplicationDocumentsDirectory();
     final String dirPath = '${extDir.path}/Pictures/flutter_test';
     await Directory(dirPath).create(recursive: true);
-    final String filePath = '$dirPath/${timestamp()}.jpg';
+    String filePath = '$dirPath/${timestamp()}.jpg';
 
     if (controller.value.isTakingPicture) {
       // A capture is already pending, do nothing.
@@ -99,6 +103,15 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
       _showCameraException(e);
       return null;
     }
+
+
+    if(cameraView == 1) {
+      await _FFmpeg.execute("-y -i " +
+          filePath +
+          " -vf transpose=3 " +
+          filePath);
+    }
+
     return filePath;
   }
 
@@ -137,7 +150,7 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
         ),
 
         Positioned(
-          left: 5, top:5,
+          left: 10, top:10,
           child: SafeArea(
             child: Container(
               height: 50,
@@ -161,9 +174,25 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
                 ),
               ),
             ),
-
           ),
-        )
+        ),
+
+        Positioned(
+          right: 10, top:10,
+          child: SafeArea(
+            child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.black.withOpacity(0.3),
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.switch_camera, color: Colors.white),
+                  iconSize: 25,
+                  onPressed: toggleCameraView,
+                )
+            ),
+          )
+        ),
 
       ],
     );
@@ -176,4 +205,44 @@ class _CameraState extends State<Camera> with AutomaticKeepAliveClientMixin<Came
 
   @override
   bool get wantKeepAlive => true;
+
+  void toggleCameraView() async {
+
+    if (cameraView == 0 ) {
+      if (cameras.length == 1){
+        showInSnackBar("Selfie camera not found");
+        return;
+      }
+      cameraView = 1;
+    } else {
+      cameraView = 0;
+    }
+
+    //get rid of current camera
+    if (controller != null) {
+      await controller.dispose();
+    }
+
+
+    controller = CameraController(cameras[cameraView], ResolutionPreset.veryHigh);
+
+    // If the controller is updated then update the UI.
+    controller.addListener(() {
+      if (mounted) setState(() {});
+      if (controller.value.hasError) {
+        showInSnackBar('Camera error ${controller.value.errorDescription}');
+      }
+    });
+
+    try {
+      await controller.initialize();
+    } on CameraException catch (e) {
+      _showCameraException(e);
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+
+  }
 }

@@ -221,12 +221,9 @@ class _TopUserState extends State<TopUser> {
     }
   }
 
-
   void showInSnackBar(String message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message), ));
   }
-
-
 
   Future<bool> onBackButtonPress() {
     widget.changePage(1);
