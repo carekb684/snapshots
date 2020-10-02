@@ -12,7 +12,7 @@ class FirestoreService {
     Map obj = <String, dynamic>{
       "displayname": user.displayName, "uid": user.uid,
       "username": user.userName, "email": user.email,
-      "photo": user.photo,
+      "photo": user.photo, "points": user.points,
     };
     return firestore.collection("users").doc(user.uid).set(obj);
   }
@@ -65,6 +65,18 @@ class FirestoreService {
   Future<DocumentSnapshot> getFriends(String myId) {
     return firestore.collection("users").doc(myId).collection("friendlist").doc(myId).get();
 
+  }
+
+  void uploadInboxUrl(String myId, String url, DateTime dateTime, String drink) {
+    var ref = firestore.collection("users").doc(myId).collection("inbox").doc(myId);
+    ref.set({}, SetOptions(merge:true));
+
+    Map data = <String, dynamic>{"photo": url, "date": dateTime.toIso8601String(), "drink" : drink};
+     firestore.collection("users").doc(myId).collection("inbox").doc(myId).update({"inbox" : FieldValue.arrayUnion([data])});
+  }
+
+  Future<DocumentSnapshot> getInbox(String uid) {
+    return firestore.collection("users").doc(uid).collection("inbox").doc(uid).get();
   }
 
 }

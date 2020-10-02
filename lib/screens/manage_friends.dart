@@ -2,9 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:snap_shots/animations/fade_in.dart';
 import 'package:snap_shots/model/UserData.dart';
 import 'package:snap_shots/serializer/fire_serialize.dart';
 import 'package:snap_shots/service/firestore.dart';
+import 'package:snap_shots/util/widget_util.dart';
 
 class ManageFriends extends StatefulWidget {
   @override
@@ -143,28 +145,30 @@ class _ManageFriendsState extends State<ManageFriends> {
             itemBuilder: (context, index) {
               UserData user = userRequests[index];
 
-              return Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: getBorderRadius(index, userRequests.length),
-                ),
-                child: ListTile(
-                    title: Text(user.displayName),
-                    subtitle: Text(user.userName),
-                    leading: Container(
-                      margin: EdgeInsets.only(top:2.0, bottom: 2.0),
-                      child: ClipOval(
-                        child: CachedNetworkImage(
-                          width: 50,
-                          height: 50,
-                          imageUrl: user.photo,
-                          placeholder: (context, url) => CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => Icon(Icons.error),
-                          fit: BoxFit.fill,
+              return FadeAnimation( 0.4 + (index * 0.1),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: WidgetUtil.getBorderRadius(index, userRequests.length),
+                  ),
+                  child: ListTile(
+                      title: Text(user.displayName),
+                      subtitle: Text(user.userName),
+                      leading: Container(
+                        margin: EdgeInsets.only(top:2.0, bottom: 2.0),
+                        child: ClipOval(
+                          child: CachedNetworkImage(
+                            width: 50,
+                            height: 50,
+                            imageUrl: user.photo,
+                            placeholder: (context, url) => CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
+                            fit: BoxFit.fill,
+                          ),
                         ),
                       ),
-                    ),
-                    trailing: getRequestTrailing(index),
+                      trailing: getRequestTrailing(index),
+                  ),
                 ),
               );
             },
@@ -277,24 +281,26 @@ class _ManageFriendsState extends State<ManageFriends> {
             itemBuilder: (context, index) {
               UserData user = userFriends[index];
 
-              return Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: getBorderRadius(index, userFriends.length),
-                ),
-                child: ListTile(
-                  title: Text(user.displayName),
-                  subtitle: Text(user.userName),
-                  leading: Container(
-                    margin: EdgeInsets.only(top:2.0, bottom: 2.0),
-                    child: ClipOval(
-                      child: CachedNetworkImage(
-                        width: 50,
-                        height: 50,
-                        imageUrl: user.photo,
-                        placeholder: (context, url) => CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                        fit: BoxFit.fill,
+              return FadeAnimation(0.4 + (index * 0.1),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: WidgetUtil.getBorderRadius(index, userFriends.length),
+                  ),
+                  child: ListTile(
+                    title: Text(user.displayName),
+                    subtitle: Text(user.userName),
+                    leading: Container(
+                      margin: EdgeInsets.only(top:2.0, bottom: 2.0),
+                      child: ClipOval(
+                        child: CachedNetworkImage(
+                          width: 50,
+                          height: 50,
+                          imageUrl: user.photo,
+                          placeholder: (context, url) => CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
                   ),
@@ -308,15 +314,7 @@ class _ManageFriendsState extends State<ManageFriends> {
   }
 
 
-  BorderRadius getBorderRadius(int index, int length) {
-    double top = 0;
-    double bottom = 0;
 
-    if(index == 0) top = 20;
-    if (index == length -1) bottom = 20;
-
-    return BorderRadius.vertical(top: Radius.circular(top), bottom:  Radius.circular(bottom));
-  }
 
 
 

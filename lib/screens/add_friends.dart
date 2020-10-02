@@ -99,10 +99,7 @@ class _AddFriendsState extends State<AddFriends> {
                     );
                   }
 
-                  //if (runOnce) {
-                    //runOnce = false;
-                    return getUserResultList(snapshot.data.docs);
-                  //}
+                  return getUserResultList(snapshot.data.docs);
 
                 } else if (futureUsers != null){
                   return CircularProgressIndicator();

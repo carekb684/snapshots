@@ -10,6 +10,6 @@ class FireSerialize {
   }
 
   static UserData toUserData(Map<String, dynamic> map) {
-    return UserData(displayName: map["displayname"], email: map["email"], userName: map["username"], photo: map["photo"], uid: map["uid"]);
+    return UserData(displayName: map["displayname"], email: map["email"], userName: map["username"], photo: map["photo"], uid: map["uid"], points: map["points"]);
   }
 }

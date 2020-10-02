@@ -57,114 +57,123 @@ class _TopUserState extends State<TopUser> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      key: _scaffoldKey,
-      body: Container(
-        color: Theme.of(context).primaryColor, //unsafe area color
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              width: double.infinity,
-              color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                      height: 360,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30),),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+    return WillPopScope(
+      onWillPop: onBackButtonPress,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        key: _scaffoldKey,
+        body: Container(
+          color: Theme.of(context).primaryColor, //unsafe area color
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Container(
+                width: double.infinity,
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        height: 360,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30),),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
 
 
 
-                          Align(
-                            alignment: AlignmentDirectional.topStart,
-                            child: IconButton(
-                              icon: Icon(Icons.close, color: Colors.white),
-                              iconSize: 30,
-                              onPressed: closeImagePressed,
-                            ),
-                          ),
-
-                          SizedBox(height: 40,),
-
-                          Container(
-                            height: 200,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(200 / 2)),
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 6.0,
+                            Align(
+                              alignment: AlignmentDirectional.topStart,
+                              child: IconButton(
+                                icon: Icon(Icons.close, color: Colors.white),
+                                iconSize: 30,
+                                onPressed: closeImagePressed,
                               ),
                             ),
-                            child: ClipOval(
-                              child: InkWell(
-                                onTap: onClickUser,
-                                child: CachedNetworkImage(
-                                  imageUrl: userData.photo == null ? "" : userData.photo,
-                                  placeholder: (context, url) => CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/avatar.png"), fit: BoxFit.fill)),),
-                                  fit: BoxFit.fill,
+
+                            SizedBox(height: 20,),
+                            CenterRowSideIcon(
+                              icon: Icon(Icons.local_drink),
+                              iconLeftSide: true,
+                              text: Text(userData.points == null ? "0" : userData.points.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
+                            ),
+                            SizedBox(height: 10,),
+
+                            Container(
+                              height: 200,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(200 / 2)),
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 6.0,
+                                ),
+                              ),
+                              child: ClipOval(
+                                child: InkWell(
+                                  onTap: onClickUser,
+                                  child: CachedNetworkImage(
+                                    imageUrl: userData.photo == null ? "" : userData.photo,
+                                    placeholder: (context, url) => CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) => Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/avatar.png"), fit: BoxFit.fill)),),
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
 
-                          SizedBox(height: 10,),
+                            SizedBox(height: 10,),
 
-                          TextField(
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(border: InputBorder.none),
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                              controller: displayNameController,
-                              onSubmitted: onSubmitDisplayName,
-                            ),
+                            TextField(
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(border: InputBorder.none),
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                controller: displayNameController,
+                                onSubmitted: onSubmitDisplayName,
+                              ),
 
-                        ],
-                      ),
-                  ),
-                  SizedBox(height: 20),
-
-                  InkWell(
-                    onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (BuildContext context) => AddFriends())),
-                    child: CenterRowSideIcon(
-                      text: Text("Add friends", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                      icon: Icon(Icons.person_add, size: 30,),
-                      iconLeftSide: true,
+                          ],
+                        ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  InkWell(
-                    onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (BuildContext context) => ManageFriends())),
-                    child: CenterRowSideIcon(
-                      text: Text("Manage friends", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                      icon: Icon(Icons.supervised_user_circle, size: 30,),
-                      iconLeftSide: true,
-                    ),
-                  ),
+                    SizedBox(height: 20),
 
-                  SizedBox(height: 40),
-                  InkWell(
-                    onTap: signOut,
-                    child: CenterRowSideIcon(
-                        text: Text("Sign out", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                        icon: Icon(Icons.exit_to_app, size: 30),
+                    InkWell(
+                      onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (BuildContext context) => AddFriends())),
+                      child: CenterRowSideIcon(
+                        text: Text("Add friends", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                        icon: Icon(Icons.person_add, size: 30,),
                         iconLeftSide: true,
+                      ),
                     ),
-                  )
+                    SizedBox(height: 20),
+                    InkWell(
+                      onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (BuildContext context) => ManageFriends())),
+                      child: CenterRowSideIcon(
+                        text: Text("Manage friends", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                        icon: Icon(Icons.supervised_user_circle, size: 30,),
+                        iconLeftSide: true,
+                      ),
+                    ),
 
-                ],
+                    SizedBox(height: 40),
+                    InkWell(
+                      onTap: signOut,
+                      child: CenterRowSideIcon(
+                          text: Text("Sign out", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                          icon: Icon(Icons.exit_to_app, size: 30),
+                          iconLeftSide: true,
+                      ),
+                    )
+
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      )
+        )
+      ),
     );
 
   }
@@ -218,4 +227,9 @@ class _TopUserState extends State<TopUser> {
   }
 
 
+
+  Future<bool> onBackButtonPress() {
+    widget.changePage(1);
+    return Future.value(false);
+  }
 }

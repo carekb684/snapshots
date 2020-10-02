@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snap_shots/screens/camera.dart';
-import 'package:snap_shots/screens/left_temp.dart';
+import 'package:snap_shots/screens/left_inbox.dart';
 import 'package:snap_shots/screens/right_temp.dart';
 import 'package:snap_shots/screens/top_user.dart';
 
@@ -22,7 +22,7 @@ class _HomeState extends State<Home> {
       physics: horizontalScrolling ? null : NeverScrollableScrollPhysics(),
       controller: horizontalController,
       children: [
-        LeftTemp(), CameraPageView(horizScroll: setHorizontalScroll), RightTemp(),
+        LeftInbox(), CameraPageView(horizScroll: setHorizontalScroll), RightTemp(),
       ],
     );
   }

@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:snap_shots/model/UserData.dart';
+import 'package:snap_shots/service/firestore.dart';
 
 class SendPic extends StatefulWidget {
   SendPic({this.imagePath});
@@ -36,11 +38,15 @@ class _SendPicState extends State<SendPic> {
   };
 
   UserData userData;
+  FirestoreService fireServ;
+  FirebaseStorage storage;
 
   @override
   void didChangeDependencies() {
-    userData = Provider.of<UserData>(context);
     super.didChangeDependencies();
+    userData = Provider.of<UserData>(context);
+    fireServ = Provider.of<FirestoreService>(context);
+    storage = Provider.of<FirebaseStorage>(context);
   }
 
   @override
@@ -84,7 +90,7 @@ class _SendPicState extends State<SendPic> {
                 child: Text(selectedDrink == "" ? "Select a drink before sending" : selectedDrink, style: TextStyle(color: Colors.black),)),
 
             IconButton(
-              onPressed: () {},
+              onPressed: onTapSend,
               icon: Icon(Icons.send),
               color: Colors.black,
             )
@@ -110,7 +116,7 @@ class _SendPicState extends State<SendPic> {
                   child: IconButton(
                     icon: Icon(Icons.close, color: Colors.white),
                     iconSize: 25,
-                    onPressed: closeImagePressed,
+                    onPressed: deleteImageAndClose,
                   )
               ),
             ),
@@ -124,7 +130,7 @@ class _SendPicState extends State<SendPic> {
     return widget.imgFile;
   }
 
-  void closeImagePressed() {
+  void deleteImageAndClose() {
     widget.imgFile.deleteSync();
     Navigator.pop(context);
   }
@@ -258,4 +264,29 @@ class _SendPicState extends State<SendPic> {
   }
 
 
+
+  void onTapSend() {
+    if (selectedDrink.isEmpty) {
+      return;
+    }
+
+    //update points
+    if (userData.points == null) {
+      userData.points = 1;
+    } else {
+      userData.points = userData.points + 1;
+    }
+    fireServ.addUserData(userData);
+
+    //upload to storage
+    var dateNow = DateTime.now();
+    StorageUploadTask uploadTask = storage.ref().child("inbox").child(userData.uid).child(dateNow.toIso8601String()).putFile(widget.imgFile);
+    uploadTask.onComplete.then((value) async {
+      String url = await value.ref.getDownloadURL();
+      fireServ.uploadInboxUrl(userData.uid, url, dateNow, selectedDrink);
+      deleteImageAndClose();
+    });
+
+
+  }
 }
