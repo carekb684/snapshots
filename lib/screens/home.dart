@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snap_shots/screens/camera.dart';
 import 'package:snap_shots/screens/left_inbox.dart';
-import 'package:snap_shots/screens/right_temp.dart';
+import 'package:snap_shots/screens/right_map.dart';
 import 'package:snap_shots/screens/top_user.dart';
 
 
@@ -15,18 +15,40 @@ class _HomeState extends State<Home> {
   PageController horizontalController = PageController(initialPage: 1);
   bool horizontalScrolling = true;
 
+
+
+  @override
+  void initState() {
+    super.initState();
+    horizontalController.addListener(() {
+      if (horizontalController.page == 2.0) {
+        setHorizontalScroll(false);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
     return PageView(
+      onPageChanged: pageChanged,
       physics: horizontalScrolling ? null : NeverScrollableScrollPhysics(),
       controller: horizontalController,
       children: [
-        LeftInbox(), CameraPageView(horizScroll: setHorizontalScroll), RightTemp(),
+        LeftInbox(), CameraPageView(horizScroll: setHorizontalScroll), RightMap(changePage: animateToPage),
       ],
     );
   }
 
+  void pageChanged(int value) {
+    if (value == 1 || value == 0) {
+      setHorizontalScroll(true);
+    }
+  }
+
+  void animateToPage(int pageNr) {
+    horizontalController.animateToPage(pageNr, duration: Duration(milliseconds: 600), curve: Curves.ease);
+  }
 
   void setHorizontalScroll(bool enable) {
     setState(() {

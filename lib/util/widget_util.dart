@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class WidgetUtil {
 
+  // gets the border radius dependant on the items index in a list
   static BorderRadius getBorderRadius(int index, int length) {
     double top = 0;
     double bottom = 0;
