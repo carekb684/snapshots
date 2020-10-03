@@ -40,7 +40,12 @@ dependencies:
   horizontal_blocked_scroll_physics: ^3.0.0
   image_picker: ^0.6.7+11
   flutter_keyboard_visibility: ^3.2.2
-  story_viewer: ^0.0.16
+  #story_viewer: ^0.0.16
+  #story freeze bugfix:
+  story_viewer:
+    git:
+      url: https://github.com/furkansarihan/story_viewer.git
+      ref: f8c3e5c13ecc2ed1c4addded8b7c26f9f1dd5634
   flutter_ffmpeg: ^0.3.0
 
 

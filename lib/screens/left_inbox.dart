@@ -110,6 +110,8 @@ class _LeftInboxState extends State<LeftInbox> {
 
     if (runOnce) {
       for (DocumentSnapshot doc in data) {
+        if (doc.data() == null) continue;
+
         var inboxList = doc.data()["inbox"];
         String uid = doc.id;
         List<InboxEntry> userPhotos = [];

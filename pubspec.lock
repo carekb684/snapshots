@@ -521,9 +521,11 @@ packages:
   story_viewer:
     dependency: "direct main"
     description:
-      name: story_viewer
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: f8c3e5c13ecc2ed1c4addded8b7c26f9f1dd5634
+      resolved-ref: f8c3e5c13ecc2ed1c4addded8b7c26f9f1dd5634
+      url: "https://github.com/furkansarihan/story_viewer.git"
+    source: git
     version: "0.0.16"
   stream_channel:
     dependency: transitive

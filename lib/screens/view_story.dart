@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:snap_shots/model/inbox_model.dart';
 import 'package:snap_shots/model/inbox_user_data.dart';
@@ -37,7 +38,8 @@ class _ViewStoriesState extends State<ViewStories> {
     List<StoryItemModel> stories = [];
 
     for (InboxEntry entry in inbox.inboxEntrys) {
-      stories.add(StoryItemModel(url: entry.photo));
+      //stories.add(StoryItemModel(url: entry.photo));
+      stories.add(StoryItemModel(imageProvider: CachedNetworkImageProvider(entry.photo,)));
     }
     return stories;
   }
