@@ -47,6 +47,7 @@ dependencies:
       url: https://github.com/furkansarihan/story_viewer.git
       ref: f8c3e5c13ecc2ed1c4addded8b7c26f9f1dd5634
   flutter_ffmpeg: ^0.3.0
+  google_maps_flutter: ^1.0.2
 
 
   # The following adds the Cupertino Icons font to your application.
