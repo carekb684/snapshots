@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:snap_shots/model/UserData.dart';
@@ -42,6 +44,16 @@ class _SendPicState extends State<SendPic> {
   UserData userData;
   FirestoreService fireServ;
   FirebaseStorage storage;
+  Location location = Location();
+
+  Completer<LocationData> currentLocation = Completer();
+
+  @override
+  void initState() {
+    super.initState();
+
+    getLocation();
+  }
 
   @override
   void didChangeDependencies() {
@@ -290,10 +302,16 @@ class _SendPicState extends State<SendPic> {
     StorageUploadTask uploadTask = storage.ref().child("inbox").child(userData.uid).child(dateNow.toIso8601String()).putFile(widget.imgFile);
     uploadTask.onComplete.then((value) async {
       String url = await value.ref.getDownloadURL();
-      fireServ.uploadInboxUrl(userData.uid, url, dateNow, selectedDrink);
+      var locationData = await currentLocation.future;
+      fireServ.uploadInboxUrl(userData.uid, url, dateNow, selectedDrink, locationData);
       deleteImageAndClose(menuOpen);
     });
 
 
+  }
+
+  void getLocation() async {
+    var locationData = await location.getLocation();
+    currentLocation.complete(locationData);
   }
 }

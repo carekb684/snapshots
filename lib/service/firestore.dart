@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:location_platform_interface/location_platform_interface.dart';
 import 'package:snap_shots/model/UserData.dart';
 
 
@@ -67,12 +68,14 @@ class FirestoreService {
 
   }
 
-  void uploadInboxUrl(String myId, String url, DateTime dateTime, String drink) {
+  void uploadInboxUrl(String myId, String url, DateTime dateTime, String drink, LocationData locationData) {
     var ref = firestore.collection("users").doc(myId).collection("inbox").doc(myId);
     ref.set({}, SetOptions(merge:true));
 
-    Map data = <String, dynamic>{"photo": url, "date": dateTime.toIso8601String(), "drink" : drink};
-     firestore.collection("users").doc(myId).collection("inbox").doc(myId).update({"inbox" : FieldValue.arrayUnion([data])});
+    Map data = <String, dynamic>{"photo": url, "date": dateTime.toIso8601String(),
+      "drink" : drink, "long" : locationData.longitude, "lat" : locationData.latitude};
+
+    firestore.collection("users").doc(myId).collection("inbox").doc(myId).update({"inbox" : FieldValue.arrayUnion([data])});
   }
 
   Future<DocumentSnapshot> getInbox(String uid) {
