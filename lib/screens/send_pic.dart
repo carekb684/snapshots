@@ -31,13 +31,15 @@ class _SendPicState extends State<SendPic> {
     "Beer": Icon(Icons.local_drink, size: 40,),
     "Red wine": Icon(Icons.local_drink, size: 40),
     "White wine": Icon(Icons.local_drink, size: 40),
-    "White wine2": Icon(Icons.local_drink, size: 40),
-    "White wine3": Icon(Icons.local_drink, size: 40),
-    "White wine4": Icon(Icons.local_drink, size: 40),
-    "White wine5": Icon(Icons.local_drink, size: 40),
     "Whiskey": Icon(Icons.local_drink, size: 40),
     "Cider": Icon(Icons.local_drink, size: 40),
     "Water": Icon(Icons.local_drink, size: 40),
+    "Coca Cola": Icon(Icons.local_drink, size: 40),
+    "Sprite": Icon(Icons.local_drink, size: 40),
+    "Fanta": Icon(Icons.local_drink, size: 40),
+    "Tropicana": Icon(Icons.local_drink, size: 40),
+    "Prosecco": Icon(Icons.local_drink, size: 40),
+    "Margarita": Icon(Icons.local_drink, size: 40),
     "P2": Icon(Icons.local_drink, size: 40),
   };
 
@@ -260,8 +262,7 @@ class _SendPicState extends State<SendPic> {
                               ),
 
 
-                              Text("asdasd"),
-                              Text("asdasd"),
+
                             ],
                           ),
                       ),

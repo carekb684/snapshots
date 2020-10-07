@@ -39,9 +39,9 @@ class CenterRowSideIcon extends StatelessWidget {
     return iconLeftSide ? Spacer() :
     Expanded(
       child: Align(
-          alignment: AlignmentDirectional.centerEnd,
+          alignment: AlignmentDirectional.centerStart,
           child: Padding(
-            padding:  EdgeInsets.only(right: 4),
+            padding:  EdgeInsets.only(left: 4),
             child: getIcon(),
           )
       ),

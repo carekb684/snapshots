@@ -258,6 +258,7 @@ class _ManageFriendsState extends State<ManageFriends> {
         }
 
         setState(() {
+          friendsRunOnce = true;
           fUserFriends = Future.wait(fUserDatas);
         });
       }

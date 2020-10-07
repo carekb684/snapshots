@@ -100,7 +100,7 @@ class _TopUserState extends State<TopUser> {
                             SizedBox(height: 20,),
                             CenterRowSideIcon(
                               icon: Icon(Icons.local_drink),
-                              iconLeftSide: true,
+                              iconLeftSide: false,
                               text: Text(userData.points == null ? "0" : userData.points.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
                             ),
                             SizedBox(height: 10,),

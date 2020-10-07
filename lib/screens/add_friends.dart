@@ -212,7 +212,10 @@ class _AddFriendsState extends State<AddFriends> {
 
         // no requests sent
         setState(() {
-          trailingIcons[targetId] = IconButton(icon: Icon(Icons.add, color: Colors.black12), iconSize: 30, onPressed: () => onAddFriend(targetId),);
+          trailingIcons[targetId] =
+              IconButton(
+                padding: EdgeInsets.all(0.0),
+                icon: Icon(Icons.add, color: Colors.black12), iconSize: 30, onPressed: () => onAddFriend(targetId),);
         });
       });
 

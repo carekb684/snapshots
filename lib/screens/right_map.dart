@@ -198,7 +198,6 @@ class _RightMapState extends State<RightMap> {
           fUserDatas.add(fireServ.getUser(uid));
         }
 
-
         Future.wait(fUserDatas).then((value) {
           friendsData = value.map((e) => FireSerialize.toUserData(e.data())).toList();
           //also current user
@@ -223,7 +222,7 @@ class _RightMapState extends State<RightMap> {
               var long = map["long"];
               var lat = map["lat"];
 
-
+              // latest entry only
               List<InboxEntry> userInboxes = [InboxEntry(date: DateTime.parse(date), photo: photo, drink: drink, latitude: lat, longitude: long)];
               var inboxUserData = InboxUserData(inboxEntrys: userInboxes, userData: friendsData.firstWhere((element) => element.uid == uid),);
               friendInboxes.add(inboxUserData);
@@ -259,7 +258,6 @@ class _RightMapState extends State<RightMap> {
   void onMarkerTap(String uid, InboxEntry inboxEntry) {
     UserData user = friendsData.firstWhere((element) => element.uid == uid);
 
-
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
@@ -292,11 +290,12 @@ class _RightMapState extends State<RightMap> {
     int h = diff.inHours;
     int m = diff.inMinutes;
 
-    String dateText;
+    String dateText = "";
     if (h != 0) {
-      dateText = h.toString() + " hours and";
+      dateText = h.toString() + " hours and ";
+      m = m - (60*h);
     }
-    dateText = m.toString() + " minutes ago";
+    dateText = dateText + m.toString() + " minutes ago";
 
     return Text(dateText, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black54),);
   }
